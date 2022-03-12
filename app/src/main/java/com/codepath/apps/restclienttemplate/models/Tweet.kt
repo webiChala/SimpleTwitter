@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate.models
 
+import com.codepath.apps.restclienttemplate.TimeFormatter
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -7,6 +8,10 @@ class Tweet {
     var body: String = ""
     var createdAt: String = ""
     var user: User? = null
+    fun getFormattedTimeStamp() : String {
+        return TimeFormatter.getTimeDifference(this.createdAt).toString()
+    }
+
     companion object {
         fun fromJson(jsonObject: JSONObject) : Tweet {
             val tweet = Tweet()
@@ -23,5 +28,6 @@ class Tweet {
             }
             return tweets
         }
+
     }
 }

@@ -40,11 +40,16 @@ class TweetsAdapter (val tweets : ArrayList<Tweet>) : RecyclerView.Adapter<Tweet
             tvUsername.text = tweet.user?.name
             tvTweetBody.text = tweet.body
             Glide.with(itemView).load(tweet.user?.publicImageUrl).into(ivProfileImage)
+            timeStamp.setText(tweet.getFormattedTimeStamp())
+            screenName.text = tweet.user?.screenName
 
         }
 
         val ivProfileImage = itemView.findViewById<ImageView>(R.id.ivProfileImage)
         val tvUsername = itemView.findViewById<TextView>(R.id.tvUsername)
         val tvTweetBody = itemView.findViewById<TextView>(R.id.tvTweetBody)
+        val timeStamp = itemView.findViewById<TextView>(R.id.timeStamp)
+        val screenName = itemView.findViewById<TextView>(R.id.screeName)
+
     }
 }
