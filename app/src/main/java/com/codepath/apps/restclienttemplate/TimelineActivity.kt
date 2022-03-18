@@ -44,7 +44,7 @@ class TimelineActivity : AppCompatActivity() {
 
         client = TwitterApplication.getRestClient(this)
         rvTweets = findViewById(R.id.rvTweets)
-        adapter = TweetsAdapter(tweets)
+        adapter = TweetsAdapter(this, tweets)
 
         rvTweets.layoutManager = LinearLayoutManager(this)
         rvTweets.adapter = adapter
