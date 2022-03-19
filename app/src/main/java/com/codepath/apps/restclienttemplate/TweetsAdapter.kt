@@ -122,6 +122,8 @@ class TweetsAdapter (private val context : Context, val tweets : ArrayList<Tweet
 //            Toast.makeText(context, movie.title, Toast.LENGTH_SHORT).show()
             val intent = Intent(context, TweetDetail::class.java)
             intent.putExtra(TWEET_EXTRA, tweet)
+            intent.putExtra("tweets", tweets)
+            intent.putExtra("POSITION", pos)
             context.startActivity(intent)
 
 

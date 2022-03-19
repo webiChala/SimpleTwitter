@@ -1,8 +1,15 @@
 package com.codepath.apps.restclienttemplate
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -52,11 +59,47 @@ class TimelineActivity : AppCompatActivity() {
         populateHomeTimeline()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.compose) {
+            //Navigate to the compose activity
+            val intent = Intent(this, ComposeActivity::class.java)
+            editActivityResultLauncher.launch(intent)
+
+            /*//startActivityForResult(intent, REQUEST_CODE)*/
+        }
+        Log.i("Amir", "Compose")
+        return super.onContextItemSelected(item)
+    }
+    var editActivityResultLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        // If the user comes back to this activity from EditActivity
+        // with no error or cancellation
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data = result.data
+            // Get the data passed from EditActivity
+            if (data != null) {
+                val tweet = data.getParcelableExtra("tweet") as Tweet
+                Log.i(TAG, "The reply is $tweet")
+                //Update the timeline
+                tweets.add(0, tweet)
+                adapter.notifyItemInserted(0)
+                rvTweets.smoothScrollToPosition(0)
+            }
+        }
+    }
+
     fun populateHomeTimeline() {
         client.getHomeTimeline(object : JsonHttpResponseHandler() {
             override fun onFailure(statusCode: Int, headers: Headers?, response: String?, throwable: Throwable?)
             {
-                Log.i(TAG, "onFailure! ")
+                Log.i(TAG, "onFailure $statusCode")
             }
 
             override fun onSuccess(statusCode: Int, headers: Headers, json: JSON) {
@@ -83,6 +126,8 @@ class TimelineActivity : AppCompatActivity() {
         })
     }
     companion object {
-        var TAG = "TimelineActivity"
+        val TAG = "TimelineActivity"
+        val REQUEST_CODE = 10
+
     }
 }
